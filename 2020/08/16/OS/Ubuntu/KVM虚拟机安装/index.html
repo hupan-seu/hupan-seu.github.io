@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>IO Man&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="IO Man&#39;s Wiki" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="安装参考：https:&#x2F;&#x2F;www.sysgeek.cn&#x2F;install-configure-kvm-ubuntu-18-04&#x2F; 步骤步骤1：验证Linux系统是否支持硬件虚拟化可以执行如下命令验证Linux系统是否支持硬件虚拟化： 123egrep -c &#39;(vmx|svm)&#39; &#x2F;proc&#x2F;cpuinfo# 如果输出大于 0，则表示系统支持硬件虚拟化。否则请重启">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO Man&#39;s Wiki">
+<meta property="og:url" content="http://ioman.top/2020/08/16/OS/Ubuntu/KVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="IO Man&#39;s Wiki">
+<meta property="og:description" content="安装参考：https:&#x2F;&#x2F;www.sysgeek.cn&#x2F;install-configure-kvm-ubuntu-18-04&#x2F; 步骤步骤1：验证Linux系统是否支持硬件虚拟化可以执行如下命令验证Linux系统是否支持硬件虚拟化： 123egrep -c &#39;(vmx|svm)&#39; &#x2F;proc&#x2F;cpuinfo# 如果输出大于 0，则表示系统支持硬件虚拟化。否则请重启">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-16T01:10:19.122Z">
+<meta property="article:modified_time" content="2020-08-15T13:02:02.091Z">
+<meta property="article:author" content="Hu Pan">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="IO Man&#39;s Wiki" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">IO Man&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>分类</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Database
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cassandra
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/Cassandra/%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/">操作命令</a></li>  <li class="file"><a href="/2020/08/16/Database/Cassandra/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">安装部署</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            HBase
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/HBase/Hbase%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/">HBase数据库操作</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MongoDB
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/MongoDB/%E5%AE%89%E8%A3%85%E5%92%8C%E7%AE%A1%E7%90%86/">安装和管理</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/MySQL/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">安装配置</a></li>  <li class="file"><a href="/2020/08/16/Database/MySQL/%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/">操作命令</a></li>  <li class="file"><a href="/2020/08/16/Database/MySQL/%E7%AE%A1%E7%90%86/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Postgre
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/Postgre/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/"></a></li>  <li class="file"><a href="/2020/08/16/Database/Postgre/%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/Redis/Redis%E5%91%BD%E4%BB%A4/"></a></li>  <li class="file"><a href="/2020/08/16/Database/Redis/Redis%E9%85%8D%E7%BD%AE/"></a></li>  <li class="file"><a href="/2020/08/16/Database/Redis/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/"></a></li>  <li class="file"><a href="/2020/08/16/Database/Redis/%E7%AD%96%E7%95%A5%E5%92%8C%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            基础知识
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E4%BA%8B%E5%8A%A1/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            本地缓存
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Database/%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98/Guava%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98/">Guava本地缓存</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Docker/%E5%91%BD%E4%BB%A4-%E5%AE%B9%E5%99%A8/">命令-容器</a></li>  <li class="file"><a href="/2020/08/16/Docker/%E5%91%BD%E4%BB%A4-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F/">命令-构建镜像</a></li>  <li class="file"><a href="/2020/08/16/Docker/%E5%91%BD%E4%BB%A4-%E9%95%9C%E5%83%8F/">命令-镜像</a></li>  <li class="file"><a href="/2020/08/16/Docker/%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/">安装和配置</a></li>  <li class="file"><a href="/2020/08/16/Docker/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"></a></li>  <li class="file"><a href="/2020/08/16/Docker/%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/"></a></li>  <li class="file"><a href="/2020/08/16/Docker/%E7%BD%91%E7%BB%9C/"></a></li>  <li class="file"><a href="/2020/08/16/Docker/%E9%9B%86%E6%88%90-Maven/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Language
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            C&C++
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/C&C++/Qt%E5%BC%80%E5%8F%91/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Erlang
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Erlang/Erlang/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Java
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            IDE
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/IDE/IDE%20%E7%9B%B8%E5%85%B3/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            JDK&JVM
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/JDK&JVM/JVM%20%E7%9B%B8%E5%85%B3/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Java/JDK&JVM/Java%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E7%B1%BB/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Java/JDK&JVM/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Maven
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/Maven/Json/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Java/Maven/%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/">依赖管理</a></li>  <li class="file"><a href="/2020/08/16/Language/Java/Maven/%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Java/Maven/%E9%85%8D%E7%BD%AE%E5%92%8C%E7%A7%81%E6%9C%8D/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Spring
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/Spring/JPA/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Web
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/Web/Web/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            模板
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Java/%E6%A8%A1%E6%9D%BF/pom/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Java/%E6%A8%A1%E6%9D%BF/spring-pom/"></a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Nodejs
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Nodejs/Npm/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Nodejs/%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Shell
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Language/Shell/%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8/"></a></li>  <li class="file"><a href="/2020/08/16/Language/Shell/%E6%A8%A1%E6%9D%BF/">模板</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Network
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            传输层
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Network/%E4%BC%A0%E8%BE%93%E5%B1%82/TLS%E4%BB%A3%E7%90%86%E6%A8%A1%E5%9D%97/"></a></li>  <li class="file"><a href="/2020/08/16/Network/%E4%BC%A0%E8%BE%93%E5%B1%82/%E7%AB%AF%E5%8F%A3%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/"></a></li>  <li class="file"><a href="/2020/08/16/Network/%E4%BC%A0%E8%BE%93%E5%B1%82/%E7%AB%AF%E5%8F%A3%E6%B5%8B%E8%AF%95/"></a></li>  <li class="file"><a href="/2020/08/16/Network/%E4%BC%A0%E8%BE%93%E5%B1%82/%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">端口转发</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络层
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/Network/%E7%BD%91%E7%BB%9C%E5%B1%82/wireshark/"></a></li>  <li class="file"><a href="/2020/08/16/Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E6%8A%93%E5%8C%85/">抓包</a></li>  <li class="file"><a href="/2020/08/16/Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E8%B7%AF%E7%94%B1%E9%85%8D%E7%BD%AE/"></a></li>  <li class="file"><a href="/2020/08/16/Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E9%99%90%E6%B5%81/"></a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            OS
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            All
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/OS/All/%E5%8E%8B%E7%BC%A9%E8%A7%A3%E5%8E%8B%E5%91%BD%E4%BB%A4/">压缩解压命令</a></li>  <li class="file"><a href="/2020/08/16/OS/All/%E6%8C%82%E8%BD%BD%E7%BD%91%E7%BB%9C%E7%9B%98/"></a></li>  <li class="file"><a href="/2020/08/16/OS/All/%E8%B4%A6%E5%8F%B7%E5%92%8C%E7%99%BB%E5%BD%95/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            CentOS
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/OS/CentOS/%E7%B3%BB%E7%BB%9F%E6%8E%A7%E5%88%B6/"></a></li>  <li class="file"><a href="/2020/08/16/OS/CentOS/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"></a></li>  <li class="file"><a href="/2020/08/16/OS/CentOS/%E9%98%B2%E7%81%AB%E5%A2%99/">防火墙</a></li>  <li class="file"><a href="/2020/08/16/OS/CentOS/%E9%9D%99%E6%80%81ip%E9%85%8D%E7%BD%AE/">静态ip配置</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MacOS
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/OS/MacOS/homebrew/"></a></li>  <li class="file"><a href="/2020/08/16/OS/MacOS/MacOS/"></a></li>  <li class="file"><a href="/2020/08/16/OS/MacOS/ssh%E9%85%8D%E7%BD%AE/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenWRT
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/OS/OpenWRT/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            Ubuntu
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file active"><a href="/2020/08/16/OS/Ubuntu/KVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85/"></a></li>  <li class="file"><a href="/2020/08/16/OS/Ubuntu/%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4/"></a></li>  <li class="file"><a href="/2020/08/16/OS/Ubuntu/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Windows
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/OS/Windows/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"></a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            协议
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            HTTP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/HTTP/Cookie/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MQTT
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/MQTT/MQTT%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/MQTT/%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6/">相关组件</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SIP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/SIP/OpenSIPS/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/SIP/P2P/"></a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/CoAP/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%8D%8F%E8%AE%AE/ProtoBuf/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            安全加密
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            证书工具
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/%E8%AF%81%E4%B9%A6%E5%B7%A5%E5%85%B7/Easy-RSA/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/%E8%AF%81%E4%B9%A6%E5%B7%A5%E5%85%B7/OpenSSL/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/%E8%AF%81%E4%B9%A6%E5%B7%A5%E5%85%B7/KeyTool/"></a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/Jumpserver%20-%20%E5%BC%80%E6%BA%90%E5%A0%A1%E5%9E%92%E6%9C%BA/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/ssh/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/%E6%9C%AC%E5%9C%B0%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5/"></a></li>  <li class="file"><a href="/2020/08/16/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%AF%86/%E8%AE%A4%E8%AF%81%E4%B8%8E%E8%AF%81%E4%B9%A6%E4%BB%8B%E7%BB%8D/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            测试工具
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            JMeter
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/JMeter/JMeter/"></a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            版本管理
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            git
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/git/fork%20%E5%B9%B6%E5%90%8C%E6%AD%A5%E4%BB%96%E4%BA%BA%E4%BB%93%E5%BA%93/">fork并同步他人仓库</a></li>  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/git/%E4%BD%BF%E7%94%A8%E4%BC%98%E5%8C%96/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/git/%E5%88%86%E6%94%AF/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/git/%E5%8E%8B%E7%BC%A9%E6%8F%90%E4%BA%A4/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/git/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            svn
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/svn/Svn/">Svn</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            硬件
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            ESP8266
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/ESP8266/%E6%A8%A1%E5%9D%97%E7%AE%80%E4%BB%8B/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/ESP8266/D1%20Mimi%20%E7%AE%A1%E8%84%9A%E5%9B%BE/">D1 Mini 管脚图</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            NanoPi
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/NanoPi/nginx%E8%BD%AC%E5%8F%91/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/NanoPi/%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/NanoPi/%E6%B8%A9%E5%BA%A6%E6%8E%A7%E5%88%B6%E9%A3%8E%E6%89%87/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/NanoPi/%E7%8A%B6%E6%80%81%E4%B8%8A%E6%8A%A5/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            天猫精灵
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E5%A4%A9%E7%8C%AB%E7%B2%BE%E7%81%B5/%E5%BC%80%E5%8F%91%E8%80%85%E5%B9%B3%E5%8F%B0OAuth2.0/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            树莓派
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            应用
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%BA%94%E7%94%A8/home-gateway/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%BA%94%E7%94%A8/homebridge/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%BA%94%E7%94%A8/Java%E5%BC%80%E5%8F%91/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%BA%94%E7%94%A8/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%BA%94%E7%94%A8/%E9%85%8D%E7%BD%AE%E7%BA%A2%E5%A4%96%E6%94%B6%E5%8F%91/"></a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/test/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E7%A1%AC%E4%BB%B6/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E6%A0%91%E8%8E%93%E6%B4%BE/%E7%BD%91%E7%BB%9C/">网络</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            蜂窝模组
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E8%9C%82%E7%AA%9D%E6%A8%A1%E7%BB%84/%E7%A7%BB%E8%BF%9CM26/"></a></li>  <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E8%9C%82%E7%AA%9D%E6%A8%A1%E7%BB%84/%E7%A7%BB%E8%BF%9CNB-IOT%E6%A8%A1%E7%BB%84/"></a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/2020/08/16/%E7%A1%AC%E4%BB%B6/%E4%BC%98%E5%8C%96/"></a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            软件模块
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            中间件
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E4%B8%AD%E9%97%B4%E4%BB%B6/emq/">Emq</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E4%B8%AD%E9%97%B4%E4%BB%B6/kafka/">Kafka</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E4%B8%AD%E9%97%B4%E4%BB%B6/keepalived/">Keepalived</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/">Nginx</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E4%B8%AD%E9%97%B4%E4%BB%B6/zookeeper/">Zookeeper</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            办公
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%8A%9E%E5%85%AC/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/">文件同步</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%8A%9E%E5%85%AC/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            应用软件
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/apollo/">Apollo</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/hexo/">Hexo</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/http-server/">Http-Server</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/minio/"></a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/nexus/"></a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/samba/">Samba</a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/sonar/"></a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/thingsboard/"></a></li>  <li class="file"><a href="/2020/08/16/%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97/%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6/yapi/"></a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     <li class="file"><a href="/2020/08/08/%E9%A6%96%E9%A1%B5/">首页</a></li>  <li class="file"><a href="/2020/08/16/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/"></a></li>  <li class="file"><a href="/2020/08/16/%E6%A0%91%E8%8E%93%E6%B4%BE%E8%B5%84%E6%96%99/"></a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title"><span>链接</span></h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="https://cn.bing.com/">必应</a>
+                    </li>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="https://github.com/hupan-seu/">GitHub</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-OS/Ubuntu/KVM虚拟机安装" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>参考：<a target="_blank" rel="noopener" href="https://www.sysgeek.cn/install-configure-kvm-ubuntu-18-04/">https://www.sysgeek.cn/install-configure-kvm-ubuntu-18-04/</a></p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><h5 id="步骤1：验证Linux系统是否支持硬件虚拟化"><a href="#步骤1：验证Linux系统是否支持硬件虚拟化" class="headerlink" title="步骤1：验证Linux系统是否支持硬件虚拟化"></a>步骤1：验证Linux系统是否支持硬件虚拟化</h5><p>可以执行如下命令验证Linux系统是否支持硬件虚拟化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">egrep -c &#39;(vmx|svm)&#39; &#x2F;proc&#x2F;cpuinfo</span><br><span class="line"></span><br><span class="line"># 如果输出大于 0，则表示系统支持硬件虚拟化。否则请重启系统，然后BIOS设置中启用 VT技术</span><br></pre></td></tr></table></figure>
+<p>请使用以下命令安装kvm-ok实用程序，它用于确定服务器是否能够运行硬件加速的KVM 虚拟机：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install cpu-checker</span><br><span class="line"></span><br><span class="line"># 运行 kvm-ok 命令并验证输出</span><br><span class="line">sudo kvm-ok</span><br></pre></td></tr></table></figure>
+
+<h5 id="步骤2：安装KVM及其所需的软件包"><a href="#步骤2：安装KVM及其所需的软件包" class="headerlink" title="步骤2：安装KVM及其所需的软件包"></a>步骤2：安装KVM及其所需的软件包</h5><p>请运行以下命令安装 KVM 及其依赖项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install qemu qemu-kvm libvirt-bin bridge-utils virt-manager</span><br></pre></td></tr></table></figure>
+<p>如果libvirt-bin报错，执行下面这个: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install qemu qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager</span><br></pre></td></tr></table></figure>
+<p>成功安装上述软件包后，登录的本地用户将自动添加到libvirtd组中。</p>
+<h5 id="步骤3：启动并启用libvirtd服务"><a href="#步骤3：启动并启用libvirtd服务" class="headerlink" title="步骤3：启动并启用libvirtd服务"></a>步骤3：启动并启用libvirtd服务</h5><p>当我们在 Ubuntu 18.04 LTS 中安装 qemu 和 libvirtd 软件包时，将会自动启动并启用 libvirtd 服务。</p>
+<p>如果 libvirtd 服务没按预期启动或启用，执行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo service libvirtd start</span><br><span class="line">sudo update-rc.d libvirtd enable</span><br><span class="line"></span><br><span class="line"># 验证 libvirtd 服务的状态：</span><br><span class="line">service libvirtd status</span><br></pre></td></tr></table></figure>
+
+<h5 id="步骤4：为KVM虚拟机配置网桥"><a href="#步骤4：为KVM虚拟机配置网桥" class="headerlink" title="步骤4：为KVM虚拟机配置网桥"></a>步骤4：为KVM虚拟机配置网桥</h5><p>KVM 虚拟机需要通过网桥才能访问 Host 主机或访问网络，所以在安装好之后需要先配置网桥。</p>
+<p>Ubuntu18.04的网络由netplan实用程序进行管理，在安装Ubuntu18.04系统时就会自动创建 /etc/netplan/50-cloud-init.yaml 文件来配置静态IP和网络，系统会通过 netplan 来引用此文件。</p>
+<p>下面我们需要通过 Nano 或 vi 来编辑 /etc/netplan/50-cloud-init.yaml 配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      dhcp4: no</span><br><span class="line">      dhcp6: no</span><br><span class="line"> </span><br><span class="line">  bridges:</span><br><span class="line">    br0:</span><br><span class="line">      interfaces: [ens33]</span><br><span class="line">      dhcp4: no</span><br><span class="line">      addresses: [192.168.1.170&#x2F;24]</span><br><span class="line">      gateway4: 192.168.1.1</span><br><span class="line">      nameservers:</span><br><span class="line">        addresses: [192.168.1.1]</span><br></pre></td></tr></table></figure>
+<p>我将 Linux 的静态 IP 地址添加到了网桥 br0，并将 ens33 网卡挂到了网桥 br0 下。配置文件中的网桥 IP、网关和 NS 地址按实际情况进行配置。</p>
+<p>配置文件更改完成后，请执行如下命令应用更改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo netplan apply</span><br></pre></td></tr></table></figure>
+
+<p>现在使用以下命令验证网桥状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo networkctl status -a</span><br><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<h5 id="步骤5：创建KVM虚拟机"><a href="#步骤5：创建KVM虚拟机" class="headerlink" title="步骤5：创建KVM虚拟机"></a>步骤5：创建KVM虚拟机</h5><p>创建 KVM 虚拟机的方式一共有 2 种：</p>
+<ul>
+<li>virt-manager（GUI 实用程序）</li>
+<li>virt-install 命令（CLI 实用程序）</li>
+</ul>
+<h6 id="使用virt-manager创建虚拟机"><a href="#使用virt-manager创建虚拟机" class="headerlink" title="使用virt-manager创建虚拟机"></a>使用virt-manager创建虚拟机</h6><p>要使用 virt-manager 工具创建虚拟机，可以在「终端」中执行如下命令打开：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo virt-manager</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用virt-install命通过CLI创建虚拟机"><a href="#使用virt-install命通过CLI创建虚拟机" class="headerlink" title="使用virt-install命通过CLI创建虚拟机"></a>使用virt-install命通过CLI创建虚拟机</h6><p>如果您配置的是 Ubuntu 18.04 Server，当然就需要类似使用以下 virt-install 命令从终端为 KVM 创建 VM 虚拟机。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo virt-install -n Sysgeek-Server --description &quot;Test VM for Sysgeek&quot; --os-type&#x3D;Linux --os-variant&#x3D;rhel7 --ram&#x3D;1096 --vcpus&#x3D;1 --disk path&#x3D;&#x2F;var&#x2F;lib&#x2F;libvirt&#x2F;images&#x2F; sgserver.img,bus&#x3D;virtio,size&#x3D;10 --network bridge:br0 --graphics none --location &#x2F;home&#x2F;billyfu&#x2F;rhel-server-7.3-x86_64-dvd.iso --extra-args console&#x3D;ttyS0</span><br></pre></td></tr></table></figure>
+<p>请根据您的设置替换 VM 名称、描述，ISO 文件的位置和网桥信息。</p>
+<h5 id="步骤6：配置虚拟机网络"><a href="#步骤6：配置虚拟机网络" class="headerlink" title="步骤6：配置虚拟机网络"></a>步骤6：配置虚拟机网络</h5><p>如果虚拟机启动后无法上网，可能是默认网卡或默认路由配置的问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 启动网卡</span><br><span class="line">ifconfig eth0 up</span><br><span class="line">dhclient eth0</span><br><span class="line"></span><br><span class="line"># 查看路由</span><br><span class="line">route -n</span><br><span class="line"></span><br><span class="line"># 设置默认网关</span><br><span class="line">route add default gw 192.168.10.1</span><br><span class="line"></span><br><span class="line"># 把发送给192.168.10.0网段的IP包交给eth0转发</span><br><span class="line">route add -net 192.168.10.0 netmask 255.255.255.0 dev eth0</span><br><span class="line"></span><br><span class="line"># 删除</span><br><span class="line">route del -net 192.168.10.0 netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+
+<p>删除虚拟网卡</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifconfig virbr0 down</span><br><span class="line">brctl delbr virbr0</span><br><span class="line">systemctl disable libvirtd.service</span><br></pre></td></tr></table></figure>
+
+<p>修改默认网关</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 即时生效 ：</span><br><span class="line">route add default gw 192.168.1.1</span><br><span class="line"></span><br><span class="line"># 重启生效： </span><br><span class="line">vim &#x2F;etc&#x2F;sysconfig&#x2F;network</span><br><span class="line">增加或修改下面一行</span><br><span class="line">GATEWAY&#x3D;192.168.1.1</span><br></pre></td></tr></table></figure>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/2020/08/16/OS/Ubuntu/%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    (no title)
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2020/08/16/OS/OpenWRT/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title"></div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Hu Pan &copy; 2020 
+            <a target="_blank" rel="noopener" href="http://www.miitbeian.gov.cn">备案号预留</a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
